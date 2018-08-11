@@ -1,6 +1,8 @@
 from flask import Flask, render_template
 from flask_socketio import SocketIO
 from ai import image
+import base64
+from io import BytesIO
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'aib'
@@ -24,3 +26,7 @@ def stream():
     # convert image
 
     # send image
+
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=80, debug=True)
