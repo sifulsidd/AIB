@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template
 from flask_socketio import SocketIO, emit
 from ai import image
 import db
@@ -15,6 +15,7 @@ socketio = SocketIO(app)
 @app.route('/dashboard')
 def dashboard():
     user = db.get_user('mscarn')
+    user['username'] = 'mscarn'
     return render_template('dashboard.html', user=user)
 
 
@@ -22,10 +23,11 @@ def dashboard():
 def stream(data):
     try:
         username = data['username']
-        buisness = data['buisness']
+        business = data['business']
         base64_image = data['image']
         temperature = data['temperature']
         converted_image = BytesIO(base64.b64decode(re.sub("data:image/jpeg;base64", '', base64_image)))
+
         img_str = base64_image
         try:
             processed_image, labels = image.process_image(converted_image)
@@ -33,7 +35,7 @@ def stream(data):
             processed_image.save(buffered, format="JPEG")
             img_str = base64.b64encode(buffered.getvalue())
             log = {'time': datetime.datetime.now(), 'temperature': temperature, 'labels': labels, 'images': [img_str]}
-            db.add_log(username, buisness, log)
+            db.add_log(username, business, log)
             emit('log', log)
         except:
             pass

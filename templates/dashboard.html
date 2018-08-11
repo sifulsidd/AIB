@@ -1,195 +1,179 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Accurately Insured Business</title>
-  <link rel="stylesheet" type="text/css" href="../static/css/font-awesome.css">
-  <link rel="stylesheet" type="text/css" href="../static/css/bulma.css">
-  <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+    <title>Accurately Insured Business</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/font-awesome.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/bulma.css">
+    <link rel="stylesheet" type="text/css" href="../static/css/style.css">
+
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/socket.io/1.3.6/socket.io.min.js"></script>
+    <script type="text/javascript" charset="utf-8">
+        var socket = io.connect('http://' + document.domain + ':' + location.port);
+        socket.on('connect', function() {
+            console.log('connected');
+        });
+        socket.on('stream', function(data) {
+            document.getElementById('stream').src = data;
+        });
+    </script>
 </head>
 
 <body>
-  <section class="hero-navbar">
+<section class="hero-navbar">
     <div class="hero-body">
-      <div class="container">
-        <h1 class="title">
-          <div class="gear">
-            <a href="#"><img src="../static/img/gear.PNG" width=30px></a>
-          </div>
-          <img src="../static/img/logo.PNG" alt="logo" width="100" height="80">
-        </h1>
-        <h2 class="subtitle">
-          Accurately Insured Business
-        </h2>
-      </div>
+        <div class="container">
+            <h1 class="title">
+                <div class="gear">
+                    <a href="#"><img src="../static/img/gear.PNG" width="30"></a>
+                </div>
+                <img src="../static/img/logo.PNG" alt="logo" width="100" height="80">
+            </h1>
+            <h2 class="subtitle">
+                Accurately Insured Business
+            </h2>
+        </div>
     </div>
-  </section>
+</section>
 
-  <section class="section">
+<section class="section">
     <div class="container">
-      <div class="columns">
-        <div class="column is-half">
-          <div class="box">
-            <h3 class="subtitle dark">Submit a Claim</h3>
-                <div class="field">
-                  <label class="label">Reason</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
+        <div class="columns">
+            <div class="column is-half">
+                <div class="box">
+                    <h3 class="subtitle dark">Submit a Claim</h3>
+                    <div class="field">
+                        <label class="label">Reason</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="" value="">
+                        </div>
+                    </div>
 
-                <div class="field">
-                  <label class="label">Description</label>
-                  <div class="control">
-                    <textarea class="textarea" placeholder=""></textarea>
-                  </div>
-                </div>
+                    <div class="field">
+                        <label class="label">Description</label>
+                        <div class="control">
+                            <textarea class="textarea" placeholder=""></textarea>
+                        </div>
+                    </div>
 
-                <div class="control">
-                  <button class="button is-success is-medium is-fullwidth">
+                    <div class="control">
+                        <button class="button theme-color is-medium is-fullwidth">
                     <span class="icon">
                       <i class="fa fa-send"></i>
                     </span>
-                    <span>Send</span>
-                  </button>
+                            <span>Send</span>
+                        </button>
+                    </div>
                 </div>
-          </div>
-          <div class="box">
-            <h3 class="subtitle dark">User Information</h3>
-            <div class="columns">
-              <div class="column is-half">
-                <div class="field">
-                  <label class="label">First Name</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-              </div>
-              <div class="column is-half">
-                <div class="field">
-                  <label class="label">Last Name</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="columns">
-              <div class="column is-half">
-                <div class="field">
-                  <label class="label">Username</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-              </div>
-              <div class="column is-half">
-                <div class="field">
-                  <label class="label">E-Mail</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="field">
-                  <label class="label">Phone Number</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-                <div class="field">
-                  <label class="label">Address</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                    <div class="spacing-sm"></div>
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-            <div class="control">
-              <button class="button is-success is-medium is-fullwidth">
+                <div class="box">
+                    <h3 class="subtitle dark">User Information</h3>
+                    <div class="columns">
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">First Name</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="" value="{{user['fname']}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Last Name</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="" value="{{user['lname']}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="columns">
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">Username</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="" value="{{user['username']}}">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="column is-half">
+                            <div class="field">
+                                <label class="label">E-Mail</label>
+                                <div class="control">
+                                    <input class="input" type="text" placeholder="" value="{{user['email']}}">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Phone Number</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="" value="{{user['phone']}}">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Address</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="" value="{{user['address']}}">
+                            <div class="spacing-sm"></div>
+                            <input class="input" type="text" placeholder="" value="">
+                        </div>
+                    </div>
+                    <div class="control">
+                        <button class="button theme-color is-medium is-fullwidth">
                 <span class="icon">
                   <i class="fa fa-save"></i>
                 </span>
-                <span>Save</span>
-              </button>
-            </div>
-          </div>
-          <div class="box">
-            <h3 class="subtitle dark">Business Information</h3>
-            <div class="columns">
-              <div class="column is-half">
-                <div class="field">
-                  <label class="label">First Name</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
+                            <span>Save</span>
+                        </button>
+                    </div>
                 </div>
-              </div>
-              <div class="column is-half">
-                <div class="field">
-                  <label class="label">Last Name</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="columns">
-              <div class="column is-half">
-                <div class="field">
-                  <label class="label">Username</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-              </div>
-              <div class="column is-half">
-                <div class="field">
-                  <label class="label">E-Mail</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-              </div>
-            </div>
-                <div class="field">
-                  <label class="label">Phone Number</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-                <div class="field">
-                  <label class="label">Address</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="" value="">
-                    <div class="spacing-sm"></div>
-                    <input class="input" type="text" placeholder="" value="">
-                  </div>
-                </div>
-            <div class="control">
-              <button class="button is-success is-medium is-fullwidth">
+                <div class="box">
+                    <h3 class="subtitle dark">Business Information</h3>
+                    <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="" value="{{user['businesses'][1]['name']}}">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Industry</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder=""
+                                   value="{{user['businesses'][1]['industry']}}">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label">Address</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder=""
+                                   value="{{user['businesses'][1]['address']['line1']}}">
+                            <div class="spacing-sm"></div>
+                            <input class="input" type="text" placeholder=""
+                                   value="{{user['businesses'][1]['address']['line2']}}">
+                        </div>
+                    </div>
+                    <div class="control">
+                        <button class="button theme-color is-medium is-fullwidth">
                 <span class="icon">
                   <i class="fa fa-save"></i>
                 </span>
-                <span>Save</span>
-              </button>
+                            <span>Save</span>
+                        </button>
+                    </div>
+                </div>
             </div>
-          </div>
+
+            <div class="column">
+                <div class="box">
+                    <img id="stream" src="../static/img/placeholder.jpg" width="600" height="400">
+                </div>
+
+                <div class="box">
+
+                </div>
+            </div>
         </div>
-
-        <div class="column">
-          <div class="box">
-
-          </div>
-
-          <div class="box">
-
-          </div>
-        </div>
-      </div>
     </div>
 
-  </section>
+</section>
 
 </body>
 </html>
