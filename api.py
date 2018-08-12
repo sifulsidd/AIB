@@ -10,6 +10,7 @@ import datetime
 import requests
 import pdfkit
 from twilio.rest import Client
+import json
 
 
 app = Flask(__name__)
@@ -22,31 +23,48 @@ path_wkthmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
 config = pdfkit.configuration(wkhtmltopdf=path_wkthmltopdf)
 
 running_threads = 0
+is_done = 0
 
-
-def process_image(base64_image, temperature, username, business):
+def process_image(base64_image, temperature, air_pressure, altitude, username, business):
     global running_threads
+    global is_done
     converted_image = BytesIO(base64.b64decode(re.sub("data:image/jpeg;base64", '', base64_image)))
     try:
         result = image.ms_api(converted_image)
         if result is not None:
             processed_image, labels = result
-
+            print(labels)
             current_time = str(datetime.datetime.now())
-            weather = requests.get('https://api.weather.gov/alerts/active/area/NY').json()
-            alert = weather['features'][0]['properties']['event']
+            img_str = ''
 
-            buffered = BytesIO()
-            processed_image.save(buffered, format="JPEG")
-            img_str = base64.b64encode(buffered.getvalue())
+            alert = ' Air Pressure: ' + str(air_pressure) + ' Altitude: ' + str(altitude)
+
+            if is_done % 3 == 0:
+                send_sms('AIB Alert on '+current_time+': '+" ".join(labels)+' Damage '+alert)
+                is_done = True
+
+            is_done += 1
+
+            try:
+                weather = requests.get('https://api.weather.gov/alerts/active/area/NY').json()
+                alert = weather['features'][0]['properties']['event'] + alert
+            except Exception as e:
+                print("WEATHER ERROR: " + str(e))
+
+            try:
+                buffered = BytesIO()
+                processed_image.save(buffered, format="JPEG")
+                img_str = base64.b64encode(buffered.getvalue())
+            except:
+                pass
+
             log = {'time': current_time, 'temperature': temperature, 'alert': alert,
                    'labels': labels,
                    'images': [img_str]}
+            socketio.emit('log', log, broadcast=True, include_self=False)
             db.add_log(username, business, log)
-            emit('log', log)
-            send_sms('AIB Alert on '+current_time+': '+" ".join(labels))
-    except:
-        pass
+    except Exception as e:
+        print("ERROR: "+str(e))
     running_threads -= 1
 
 
@@ -82,14 +100,16 @@ def export_pdf():
 @socketio.on('stream')
 def stream(data):
     global running_threads
-    print(data)
     try:
+        data = json.loads(data)
         username = data['username']
         business = data['business']
         base64_image = data['image']
         temperature = data['temperature']
+        air_pressure = data['air_pressure']
+        altitude = data['altitude']
         img_str = base64_image
-
+        print(img_str)
         if const.REALTIME_RECOG:
             converted_image = BytesIO(base64.b64decode(re.sub("data:image/jpeg;base64", '', base64_image)))
             img_str = base64_image
@@ -97,23 +117,23 @@ def stream(data):
                 processed_image, labels = image.process_image(converted_image)
 
                 weather = requests.get('https://api.weather.gov/alerts/active/area/NY').json()
-                alert = weather['features'][0]['properties']['event']
+                alert = weather['features'][0]['properties']['event'] + ' Air Pressure: '+str(air_pressure)+' Altitude'+str(altitude)
 
                 buffered = BytesIO()
                 processed_image.save(buffered, format="JPEG")
                 img_str = base64.b64encode(buffered.getvalue())
                 log = {'time': datetime.datetime.now(), 'temperature': temperature, 'alert': alert, 'labels': labels,
-                       'images': [img_str]}
+                       'images': [img_str], 'air_pressure': air_pressure, 'altitude': altitude}
                 db.add_log(username, business, log)
                 emit('log', log)
             except:
                 pass
         elif const.MSFT_API:
             if running_threads < const.MSFT_API_THREADS:
-                thread = Thread(target=process_image, args=(base64_image, temperature, username, business))
+                thread = Thread(target=process_image, args=(base64_image, temperature, air_pressure, altitude, username, business))
                 thread.start()
                 running_threads += 1
-        emit('stream', img_str, broadcast=True, include_self=False)
+        emit('stream', {'image': img_str, 'temperature': temperature, 'air_pressure': air_pressure, 'altitude': altitude}, broadcast=True, include_self=False)
     except Exception as e:
         return {'status': False, 'message': str(e)}
 

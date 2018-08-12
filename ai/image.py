@@ -2,8 +2,8 @@ from . import const
 import requests
 # import cv2
 
-MSFT_URL = "https://eastus.api.cognitive.microsoft.com/vision/v1.0/describe?maxCandidates=1"
-MSFT_KEY = "7b86593b414d4a5eb5096115cf2f7d55"
+MSFT_URL = "https://eastus2.api.cognitive.microsoft.com/vision/v1.0/describe"
+MSFT_KEY = "e47b133ce1fe416f8af97ba8a9311c37"
 
 
 def process_image(image):
@@ -16,9 +16,10 @@ def ms_api(image):
                       headers={'Content-Type': 'application/octet-stream',
                                'Ocp-Apim-Subscription-Key': MSFT_KEY},
                       data=image).json()
-    if const.FIRE.lower() in r['description']['tags']:
+    print(r['description']['tags'])
+    if const.FIRE.lower() in r['description']['tags'] or const.FIRE.lower():
         labels.append(const.FIRE)
-    if const.FLOOD.lower() in r['description']['tags']:
+    elif const.FLOOD.lower() in (r['description']['tags'] or r['description']['text']):
         labels.append(const.FLOOD)
     else:
         return None

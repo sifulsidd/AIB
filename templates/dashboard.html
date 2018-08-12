@@ -13,7 +13,10 @@
     console.log('connected');
   });
   socket.on('stream', function(data) {
-    document.getElementById('stream').src = data;
+    document.getElementById('temperature').innerHTML = data.temperature;
+    document.getElementById('pressure').innerHTML = data.air_pressure;
+    document.getElementById('altitude').innerHTML = data.altitude;
+    document.getElementById('stream').src = 'data:image/jpeg;base64,'+data.image;
   });
   socket.on('log', function(entry) {
     var entry = '<tr>' +
@@ -113,31 +116,6 @@
                     </div>
                 </div>
                 <div class="box">
-                    <h3 class="subtitle dark">Submit a Claim</h3>
-                    <div class="field">
-                        <label class="label">Reason</label>
-                        <div class="control">
-                            <input class="input" type="text" placeholder="" value="">
-                        </div>
-                    </div>
-
-                    <div class="field">
-                        <label class="label">Description</label>
-                        <div class="control">
-                            <textarea class="textarea" placeholder=""></textarea>
-                        </div>
-                    </div>
-
-                    <div class="control">
-                        <button class="button theme-color is-medium is-fullwidth">
-                <span class="icon">
-                  <i class="fa fa-send"></i>
-                </span>
-                            <span>Send</span>
-                        </button>
-                    </div>
-                </div>
-                <div class="box">
                     <h3 class="subtitle dark">Business Information</h3>
                     <div class="field">
                         <label class="label">Name</label>
@@ -171,11 +149,72 @@
                         </button>
                     </div>
                 </div>
+                <div class="box">
+                    <h3 class="subtitle dark">Submit a Claim</h3>
+                    <div class="field">
+                        <label class="label">Reason</label>
+                        <div class="control">
+                            <input class="input" type="text" placeholder="" value="">
+                        </div>
+                    </div>
+
+                    <div class="field">
+                        <label class="label">Description</label>
+                        <div class="control">
+                            <textarea class="textarea" placeholder=""></textarea>
+                        </div>
+                    </div>
+
+                    <div class="control">
+                        <button class="button theme-color is-medium is-fullwidth">
+                <span class="icon">
+                  <i class="fa fa-send"></i>
+                </span>
+                            <span>Send</span>
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <div class="column">
                 <div class="box">
                     <img id="stream" src="../static/img/placeholder.jpg">
+                    <p>
+                        <strong>Temperature: </strong><span id="temperature">0</span>
+                        <strong>Air Pressure: </strong><span id="pressure">0</span>
+                        <strong>Altitude: </strong><span id="altitude">0</span>
+                    </p>
+                </div>
+                <div class="box">
+                    <h3 class="subtitle dark">Log</h3>
+                    <div id="log">
+                        <table class="table">
+                            <thead>
+                            <tr>
+                                <th>TIME</th>
+                                <th>TEMP</th>
+                                <th>ALERT</th>
+                                <th>LABELS</th>
+                                <th>IMAGE</th>
+                            </tr>
+                            </thead>
+                            <tbody id="entries">
+                            {% for log in reversed(user['businesses'][1]['log']) %}
+                            <tr>
+                                <td>{{log['time']}}</td>
+                                <td>{{log['temperature']}}</td>
+                                <td>{{log['alert']}}</td>
+                                <td>{{log['labels']}}</td>
+                                <td>
+                        <span class="icon">
+                          <a href="{{log['images']}}" target="_blank"><i class="fa fa-external-link"></i></a>
+                        </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="box">
                     <h3 class="subtitle dark">Export Analytics</h3>
@@ -208,43 +247,12 @@
                             </div>
                         </div>
                     </div>
-                    <a href="/export" download="AIB-08122018.pdf" class="button theme-color is-medium is-fullwidth">
+                    <a href="/export/pdf"  target="_blank" class="button theme-color is-medium is-fullwidth">
                             <span class="icon">
                               <i class="fa fa-download"></i>
                             </span>
                             <span>Download</span>
                         </a>
-                </div>
-                <div class="box">
-                    <h3 class="subtitle dark">Log</h3>
-                    <div id="log">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>TIME</th>
-                                <th>TEMP</th>
-                                <th>ALERT</th>
-                                <th>LABELS</th>
-                                <th>IMAGE</th>
-                            </tr>
-                            </thead>
-                            <tbody id="entries">
-                            {% for log in reversed(user['businesses'][1]['log']) %}
-                            <tr>
-                                <td>{{log['time']}}</td>
-                                <td>{{log['temperature']}}</td>
-                                <td>{{log['alert']}}</td>
-                                <td>{{log['labels']}}</td>
-                                <td>
-                        <span class="icon">
-                          <a href="{{log['images']}}" target="_blank"><i class="fa fa-external-link"></i></a>
-                        </span>
-                                </td>
-                            </tr>
-                            {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
         </div>
