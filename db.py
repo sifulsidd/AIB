@@ -8,7 +8,7 @@ firebase_admin.initialize_app(cred, {
 
 
 def add_log(username, business, log):
-    data = db.reference('/'+username+'/'+business+'/logs').push()
+    data = db.reference('/'+username+'/'+business+'/log').push()
     data.set(log)
 
 
