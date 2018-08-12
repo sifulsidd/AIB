@@ -19,6 +19,92 @@
         </div>
     </div>
 </section>
+<br>
+<div class="container">
+    <div class="columns">
+        <div class="column is-one-third">
+                <h3 class="subtitle dark">User Information</h3>
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">First Name</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="" value="{{user['fname']}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">Last Name</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="" value="{{user['lname']}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="columns">
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">Username</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="" value="{{user['username']}}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="column is-half">
+                        <div class="field">
+                            <label class="label">E-Mail</label>
+                            <div class="control">
+                                <input class="input" type="text" placeholder="" value="{{user['email']}}">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Phone Number</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="" value="{{user['phone']}}">
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Address</label>
+                    <div class="control">
+                        <input class="input" type="text" placeholder="" value="{{user['address']}}">
+                        <div class="spacing-sm"></div>
+                        <input class="input" type="text" placeholder="" value="">
+                    </div>
+                </div>
+        </div>
+        <div class="column">
+          <h3 class="subtitle dark">Business Information</h3>
+              <div class="field">
+                  <label class="label">Name</label>
+                  <div class="control">
+                      <input class="input" type="text" placeholder="" value="{{user['businesses'][1]['name']}}">
+                  </div>
+              </div>
+              <div class="field">
+                  <label class="label">Industry</label>
+                  <div class="control">
+                      <input class="input" type="text" placeholder=""
+                             value="{{user['businesses'][1]['industry']}}">
+                  </div>
+              </div>
+              <div class="field">
+                  <label class="label">Address</label>
+                  <div class="control">
+                      <input class="input" type="text" placeholder=""
+                             value="{{user['businesses'][1]['address']['line1']}}">
+                      <div class="spacing-sm"></div>
+                      <input class="input" type="text" placeholder=""
+                             value="{{user['businesses'][1]['address']['line2']}}">
+                  </div>
+              </div>
+              <div class="control">
+              </div>
+        </div>
+    </div>
+</div>
 
 <section class="section">
     <div class="container">
